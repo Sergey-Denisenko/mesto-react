@@ -9,21 +9,6 @@ import api from './utils/api';
 
 function App() {
 
-  //PopupWithForm(props
-    //, () => {
-      //  const popup = document.querySelector('.popup');
-        // if (popup.contains('popup-avatar-update')) {
-        //   // <>
-        //   //   <input id="link-input_update-avatar" type="url" className="popup-avatar-update__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" defaultValue="" autoComplete="off" required/>
-        //   //   <span id="link-input_update-avatar-error" className="popup__error"></span>
-        //   // </>
-        //   console.log('qwerty');
-        //})
-    //);
-    // document.querySelector('.popup-avatar-update').classList.add('popup-avatar-update_opened');
-    // document.querySelector('.popup-avatar-update').classList.add('popup_opened');
-    //};
-
   // const [isOpen, setIsOpen] = React.useState(false);
   const [onClose, setOnClose] = React.useState(false)
 
@@ -34,21 +19,33 @@ function App() {
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
+    // setOnClose(!onClose);
   }
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
+    // setOnClose(!onClose);
   }
 
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
+    // setOnClose(!onClose);
   }
 
   const closeAllPopups = () => {
     setOnClose(!onClose);
-    setSelectedCard();
-  }
 
+    // setIsOpen(isOpen);
+    {isEditAvatarPopupOpen = false};
+    {isEditProfilePopupOpen = false};
+    // handleEditAvatarClick(false)
+    // handleEditProfileClick(false)
+    // handleAddPlaceClick(false);
+    // setIsEditAvatarPopupOpen(isEditAvatarPopupOpen);
+    // openedClass.classList.remove('popup-image_opened');
+  }
+console.log('onClose');
+console.log(onClose);
 
 
 //-------------------------------------
@@ -106,11 +103,14 @@ function App() {
 //--------------------------
 
 const [selectedCard, setSelectedCard] = React.useState()
+const [isOpen, setIsOpen] = React.useState(false)
+// let openedClass = '';
 
 const handleCardClick = (card) => {
   setSelectedCard(card);
   // console.log('card in handleCardClick');
   // console.log(card);
+  setIsOpen(!isOpen);
 }
 
 //--------------------------
@@ -124,35 +124,28 @@ const handleCardClick = (card) => {
 
         <Footer />
 
-        <PopupWithForm name="avatar-update" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
+        <PopupWithForm name="avatar-update" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={onClose} closeAllPopups={closeAllPopups}>
           <input id="link-input_update-avatar" type="url" className="popup-avatar-update__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" defaultValue="" autoComplete="off" required/>
           <span id="link-input_update-avatar-error" className="popup__error"></span>
         </PopupWithForm>
 
-        <PopupWithForm name="profile" title="Редактировать профиль"  isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
+        <PopupWithForm name="profile" title="Редактировать профиль"  isOpen={isEditProfilePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups}>
           <input id="name-input-profile" type="text" className="popup__form-name popup__input" name="name" defaultValue="Ваше имя" minLength="2" maxLength="40" autoComplete="off" required/>
           <span id="name-input-profile-error" className="popup__error"></span>
           <input id="prof-input" type="text" className="popup__form-about popup__input" name="prof" defaultValue="О себе" minLength="2" maxLength="200" autoComplete="off" required/>
           <span id="prof-input-error" className="popup__error"></span>
         </PopupWithForm>
 
-        <PopupWithForm name="add-card" title="Новое место"  isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}>
+        <PopupWithForm name="add-card" title="Новое место"  isOpen={isAddPlacePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups}>
           <input id="name-input-add-card" type="text" className="popup-add-card__form-name popup__input" name="name" placeholder="Название" defaultValue="" minLength="1" maxLength="30" autoComplete="off" required/>
           <span id="name-input-add-card-error" className="popup__error"></span>
           <input id="link-input" type="url" className="popup-add-card__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" defaultValue="" autoComplete="off" required/>
           <span id="link-input-error" className="popup__error"></span>
         </PopupWithForm>
 
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <ImagePopup card={selectedCard} onClose={onClose} isOpen={isOpen}/>
 
-          {/* {console.log('selectedCard in handleCardClick')}
-          {console.log(selectedCard)}
-          {console.log('selectedCard in handleCardClick name')}
-          {console.log(selectedCard.name)} */}
-
-        {/* </ImagePopup> */}
-
-        <div className="popup-card-delete popup__overlay">
+        {/* <div className="popup-card-delete popup__overlay">
           <form className="popup-card-delete__container" noValidate>
             <h2 className="popup-card-delete__form-title">Вы уверены?</h2>
             <fieldset className="popup-card-delete__form-profile">
@@ -160,7 +153,7 @@ const handleCardClick = (card) => {
             </fieldset>
             <button type="button" className="popup-card-delete__form-close-button popup__close-button"></button>
           </form>
-        </div>
+        </div> */}
       </div>
     </div>
   );
