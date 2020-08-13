@@ -1,9 +1,7 @@
 import React from 'react';
-import api from '../utils/api';
 import Card from './Card';
 
 function Main({onEditAvatar, onEditProfile, onAddPlace, object, cards, onCardClick}) {
-  // userName, userDescription, userAvatar, dataUserInfo}) {
 
   return (
     <main className="content">
@@ -25,19 +23,6 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, object, cards, onCardCli
             <Card card={card} onCardClick={onCardClick} />
           </div>
         ))}
-      {/* {cards.map((item, i) => (
-        <div key={item._id}>
-          <div className="card">
-            <img className="card__image" alt="" src="" style={{ backgroundImage: `url(${item.link})`}}/>
-            <div className="card__info">
-              <h2 className="card__title">{item.name}</h2>
-              <button type="button" className="card__like"></button>
-              <p className="card__like-counter">{item.likes.length}</p>
-            </div>
-            <button type="button" className="card__trash"></button>
-          </div>
-        </div>
-      ))} */}
       </section>
     </main>
   );

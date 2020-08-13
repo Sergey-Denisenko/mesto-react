@@ -1,57 +1,42 @@
 import React from 'react';
-import './App.css';
-import Header from './components/Header';
-import Main from './components/Main';
-import Footer from './components/Footer';
-import PopupWithForm from './components/PopupWithForm';
-import ImagePopup from './components/ImagePopup';
-import api from './utils/api';
+import Header from './Header';
+import Main from './Main';
+import Footer from './Footer';
+import PopupWithForm from './PopupWithForm';
+import ImagePopup from './ImagePopup';
+import api from '../utils/api';
 
 function App() {
 
-  // const [isOpen, setIsOpen] = React.useState(false);
   const [onClose, setOnClose] = React.useState(false)
-
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]  = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]  = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen]  = React.useState(false);
 
-
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
-    // setOnClose(!onClose);
   }
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
-    // setOnClose(!onClose);
   }
 
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
-    // setOnClose(!onClose);
   }
 
   const closeAllPopups = () => {
     setOnClose(!onClose);
-
-    // setIsOpen(isOpen);
-    {isEditAvatarPopupOpen = false};
-    {isEditProfilePopupOpen = false};
-    // handleEditAvatarClick(false)
-    // handleEditProfileClick(false)
-    // handleAddPlaceClick(false);
-    // setIsEditAvatarPopupOpen(isEditAvatarPopupOpen);
-    // openedClass.classList.remove('popup-image_opened');
+    setIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+    setIsOpen(false);
+    setSelectedCard();
   }
-console.log('onClose');
-console.log(onClose);
 
-
-//-------------------------------------
-
-  const [object, setObject] = React.useState({ userName: '', userDescription: '', userAvatar: ' '})
-  const [cards, setCards] = React.useState([])
+// Получение данных пользователя и массива карточек с сервера
+  const [object, setObject] = React.useState({ userName: '', userDescription: '', userAvatar: ' '});
+  const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
     api.getUserDataDefaultFromServer()
@@ -61,7 +46,6 @@ console.log(onClose);
     .then((data) => {
       setObject({
         ...object,
-
         userName: data.name,
         userDescription: data.about,
         userAvatar: data.avatar,
@@ -70,17 +54,9 @@ console.log(onClose);
     .catch((err) => {
       console.log('Ошибка. Запрос не выполнен: ', err);
     })
-    // .finally(() => {
-    //   renderLoading(false, tempSubmitButtonProfileFormTextContent, popupProfileFormSubmit);
-    //   popupProfileForm.close();
-    // })
-  // }
-
     return () => {
     };
-  }, [])
-
-//--------------------------
+  }, []);
 
   React.useEffect(() => {
     api.getCardDefaultFromServer()
@@ -88,32 +64,23 @@ console.log(onClose);
       return data;
     })
     .then((data) => {
-      setCards(
-        data
-      )
+      setCards(data)
     })
     .catch((err) => {
       console.log('Ошибка. Запрос не выполнен: ', err);
     })
-
     return () => {
     };
-  }, [])
+  }, []);
 
-//--------------------------
+// Работа над окном попапа картинки
+  const [selectedCard, setSelectedCard] = React.useState();
+  const [isOpen, setIsOpen] = React.useState(false);
 
-const [selectedCard, setSelectedCard] = React.useState()
-const [isOpen, setIsOpen] = React.useState(false)
-// let openedClass = '';
-
-const handleCardClick = (card) => {
-  setSelectedCard(card);
-  // console.log('card in handleCardClick');
-  // console.log(card);
-  setIsOpen(!isOpen);
-}
-
-//--------------------------
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+    setIsOpen(!isOpen);
+  }
 
   return (
     <div className="App">
@@ -143,17 +110,7 @@ const handleCardClick = (card) => {
           <span id="link-input-error" className="popup__error"></span>
         </PopupWithForm>
 
-        <ImagePopup card={selectedCard} onClose={onClose} isOpen={isOpen}/>
-
-        {/* <div className="popup-card-delete popup__overlay">
-          <form className="popup-card-delete__container" noValidate>
-            <h2 className="popup-card-delete__form-title">Вы уверены?</h2>
-            <fieldset className="popup-card-delete__form-profile">
-              <button type="submit" className="popup-card-delete__form-submit popup__button">Да</button>
-            </fieldset>
-            <button type="button" className="popup-card-delete__form-close-button popup__close-button"></button>
-          </form>
-        </div> */}
+        <ImagePopup card={selectedCard} onClose={onClose} closeAllPopups={closeAllPopups}/>
       </div>
     </div>
   );
