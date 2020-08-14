@@ -3,7 +3,6 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
-import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 
 function App() {
@@ -12,7 +11,6 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isCardDeletePopupOpen, setIsCardDeletePopupOpen] = React.useState(false);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -26,58 +24,17 @@ function App() {
     setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
   }
 
-  const handleCardDeleteClick = () => {
-    setIsCardDeletePopupOpen(!isCardDeletePopupOpen);
-  }
-
   const closeAllPopups = () => {
     setOnClose(!onClose);
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    setIsCardDeletePopupOpen(false);
-    setIsOpen(false);
-    setSelectedCard();
   }
 
 // Получение данных пользователя и массива карточек с сервера
   const [object, setObject] = React.useState({ userName: '', userDescription: '', userAvatar: ' '});
   const [cards, setCards] = React.useState([]);
 
-  // React.useEffect(() => {
-  //   api.getUserDataDefaultFromServer()
-  //   .then((data) => {
-  //     return data;
-  //   })
-  //   .then((data) => {
-  //     setObject({
-  //       ...object,
-  //       userName: data.name,
-  //       userDescription: data.about,
-  //       userAvatar: data.avatar,
-  //     })
-  //   })
-  //   .catch((err) => {
-  //     console.error(err);
-  //   })
-  //   return () => {
-  //   };
-  // }, []);
-
-  // React.useEffect(() => {
-  //   api.getCardDefaultFromServer()
-  //   .then((data) => {
-  //     return data;
-  //   })
-  //   .then((data) => {
-  //     setCards(data)
-  //   })
-  //   .catch((err) => {
-  //     console.error(err);
-  //   })
-  //   return () => {
-  //   };
-  // }, []);
   React.useEffect(() => {
     Promise.all([
       api.getUserDataDefaultFromServer(),
@@ -102,25 +59,12 @@ function App() {
     };
   }, []);
 
-
-
-
-
-// Работа над окном попапа картинки
-  const [selectedCard, setSelectedCard] = React.useState();
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const handleCardClick = (card) => {
-    setSelectedCard(card);
-    setIsOpen(!isOpen);
-  }
-
   return (
     <div className="App">
       <div className="page">
         <Header />
 
-        <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onDeleteCard={handleCardDeleteClick} object={object} cards={cards} onCardClick={handleCardClick}/>
+        <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} object={object} cards={cards} onClose={onClose} closeAllPopups={closeAllPopups}/>
 
         <Footer />
 
@@ -142,10 +86,6 @@ function App() {
           <input id="link-input" type="url" className="popup-add-card__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" defaultValue="" autoComplete="off" required/>
           <span id="link-input-error" className="popup__error"></span>
         </PopupWithForm>
-
-        <PopupWithForm name="card-delete" title="Вы уверены?" isOpen={isCardDeletePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups} />
-
-        <ImagePopup card={selectedCard} onClose={onClose} closeAllPopups={closeAllPopups}/>
       </div>
     </div>
   );
