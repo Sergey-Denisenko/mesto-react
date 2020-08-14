@@ -12,9 +12,13 @@ function PopupWithForm({name, title, isOpen, onClose, closeAllPopups, children})
         <h2 className="popup__form-title">{title}</h2>
         <fieldset className="popup__form-profile popup__fieldset">
           {children}
-          <button disabled type="submit" className="popup__form-submit popup__button popup__button_disabled">Сохранить</button>
+          {isOpen && (name === "card-delete") ? (
+            <button type="submit" className="popup-card-delete__form-submit popup__button">Да</button>
+          ) : (
+            <button disabled type="submit" className="popup__form-submit popup__button popup__button_disabled">Сохранить</button>
+          )}
         </fieldset>
-        <button onClick={closeAllPopups} type="button" className="popup__form-close-button popup__close-button"></button>
+        <button onClick={closeAllPopups} type="button" className="popup__form-close-button popup__close-button" />
       </form>
     </div>
   );

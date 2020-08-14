@@ -9,9 +9,10 @@ import api from '../utils/api';
 function App() {
 
   const [onClose, setOnClose] = React.useState(false)
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]  = React.useState(false);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]  = React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen]  = React.useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  const [isCardDeletePopupOpen, setIsCardDeletePopupOpen] = React.useState(false);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -25,11 +26,16 @@ function App() {
     setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
   }
 
+  const handleCardDeleteClick = () => {
+    setIsCardDeletePopupOpen(!isCardDeletePopupOpen);
+  }
+
   const closeAllPopups = () => {
     setOnClose(!onClose);
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsCardDeletePopupOpen(false);
     setIsOpen(false);
     setSelectedCard();
   }
@@ -38,40 +44,67 @@ function App() {
   const [object, setObject] = React.useState({ userName: '', userDescription: '', userAvatar: ' '});
   const [cards, setCards] = React.useState([]);
 
+  // React.useEffect(() => {
+  //   api.getUserDataDefaultFromServer()
+  //   .then((data) => {
+  //     return data;
+  //   })
+  //   .then((data) => {
+  //     setObject({
+  //       ...object,
+  //       userName: data.name,
+  //       userDescription: data.about,
+  //       userAvatar: data.avatar,
+  //     })
+  //   })
+  //   .catch((err) => {
+  //     console.error(err);
+  //   })
+  //   return () => {
+  //   };
+  // }, []);
+
+  // React.useEffect(() => {
+  //   api.getCardDefaultFromServer()
+  //   .then((data) => {
+  //     return data;
+  //   })
+  //   .then((data) => {
+  //     setCards(data)
+  //   })
+  //   .catch((err) => {
+  //     console.error(err);
+  //   })
+  //   return () => {
+  //   };
+  // }, []);
   React.useEffect(() => {
-    api.getUserDataDefaultFromServer()
-    .then((data) => {
-      return data;
+    Promise.all([
+      api.getUserDataDefaultFromServer(),
+      api.getCardDefaultFromServer()
+    ])
+    .then(([userData, cardDefault]) => {
+      return [userData, cardDefault];
     })
-    .then((data) => {
+    .then(([userData, cardDefault]) => {
       setObject({
         ...object,
-        userName: data.name,
-        userDescription: data.about,
-        userAvatar: data.avatar,
-      })
+        userName: userData.name,
+        userDescription: userData.about,
+        userAvatar: userData.avatar,
+      });
+      setCards(cardDefault);
     })
     .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен: ', err);
+      console.error(err);
     })
     return () => {
     };
   }, []);
 
-  React.useEffect(() => {
-    api.getCardDefaultFromServer()
-    .then((data) => {
-      return data;
-    })
-    .then((data) => {
-      setCards(data)
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен: ', err);
-    })
-    return () => {
-    };
-  }, []);
+
+
+
 
 // Работа над окном попапа картинки
   const [selectedCard, setSelectedCard] = React.useState();
@@ -87,7 +120,7 @@ function App() {
       <div className="page">
         <Header />
 
-        <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} object={object} cards={cards} onCardClick={handleCardClick}/>
+        <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onDeleteCard={handleCardDeleteClick} object={object} cards={cards} onCardClick={handleCardClick}/>
 
         <Footer />
 
@@ -109,6 +142,8 @@ function App() {
           <input id="link-input" type="url" className="popup-add-card__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" defaultValue="" autoComplete="off" required/>
           <span id="link-input-error" className="popup__error"></span>
         </PopupWithForm>
+
+        <PopupWithForm name="card-delete" title="Вы уверены?" isOpen={isCardDeletePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups} />
 
         <ImagePopup card={selectedCard} onClose={onClose} closeAllPopups={closeAllPopups}/>
       </div>
