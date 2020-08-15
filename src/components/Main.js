@@ -40,7 +40,6 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, object, cards, onClose, 
           {cards.map((card) => (
             <div key={card._id}>
               <Card card={card} onCardClick={handleCardClick} onDeleteCard={handleCardDeleteClick} />
-              {/* <Card card={card} onCardClick={onCardClick} onDeleteCard={onDeleteCard} /> */}
             </div>
           ))}
         </section>

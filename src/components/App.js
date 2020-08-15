@@ -14,22 +14,22 @@ function App() {
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
-  }
+  };
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
-  }
+  };
 
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
-  }
+  };
 
   const closeAllPopups = () => {
     setOnClose(!onClose);
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-  }
+  };
 
 // Получение данных пользователя и массива карточек с сервера
   const [object, setObject] = React.useState({ userName: '', userDescription: '', userAvatar: ' '});
@@ -40,9 +40,9 @@ function App() {
       api.getUserDataDefaultFromServer(),
       api.getCardDefaultFromServer()
     ])
-    .then(([userData, cardDefault]) => {
-      return [userData, cardDefault];
-    })
+    // .then(([userData, cardDefault]) => {
+    //   return [userData, cardDefault];
+    // })
     .then(([userData, cardDefault]) => {
       setObject({
         ...object,
@@ -70,21 +70,21 @@ function App() {
 
         <PopupWithForm name="avatar-update" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={onClose} closeAllPopups={closeAllPopups}>
           <input id="link-input_update-avatar" type="url" className="popup-avatar-update__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" defaultValue="" autoComplete="off" required/>
-          <span id="link-input_update-avatar-error" className="popup__error"></span>
+          <span id="link-input_update-avatar-error" className="popup__error" />
         </PopupWithForm>
 
         <PopupWithForm name="profile" title="Редактировать профиль"  isOpen={isEditProfilePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups}>
           <input id="name-input-profile" type="text" className="popup__form-name popup__input" name="name" defaultValue="Ваше имя" minLength="2" maxLength="40" autoComplete="off" required/>
-          <span id="name-input-profile-error" className="popup__error"></span>
+          <span id="name-input-profile-error" className="popup__error" />
           <input id="prof-input" type="text" className="popup__form-about popup__input" name="prof" defaultValue="О себе" minLength="2" maxLength="200" autoComplete="off" required/>
-          <span id="prof-input-error" className="popup__error"></span>
+          <span id="prof-input-error" className="popup__error" />
         </PopupWithForm>
 
         <PopupWithForm name="add-card" title="Новое место"  isOpen={isAddPlacePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups}>
           <input id="name-input-add-card" type="text" className="popup-add-card__form-name popup__input" name="name" placeholder="Название" defaultValue="" minLength="1" maxLength="30" autoComplete="off" required/>
-          <span id="name-input-add-card-error" className="popup__error"></span>
+          <span id="name-input-add-card-error" className="popup__error" />
           <input id="link-input" type="url" className="popup-add-card__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" defaultValue="" autoComplete="off" required/>
-          <span id="link-input-error" className="popup__error"></span>
+          <span id="link-input-error" className="popup__error" />
         </PopupWithForm>
       </div>
     </div>
