@@ -2,13 +2,26 @@ import React from 'react';
 import Card from './Card';
 import ImagePopup from './ImagePopup';
 import PopupWithForm from './PopupWithForm';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { CurrentCardsContext } from '../contexts/CurrentCardsContext';
 
-function Main({onEditAvatar, onEditProfile, onAddPlace, object, cards, onClose, closeAllPopups}) {
+import api from '../utils/api';
 
-  const [isCardDeletePopupOpen, setIsCardDeletePopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState();
-  const [isOpen, setIsOpen] = React.useState(false);
+// function Main({onEditAvatar, onEditProfile, onAddPlace, object, cards, onClose, closeAllPopups}) {
+function Main({onEditAvatar, onEditProfile, onAddPlace, onClose, closeAllPopups, setCards}) {
+
+  const actualUserData = React.useContext(CurrentUserContext); //Подписка на контекст
+  const cards = React.useContext(CurrentCardsContext); //Подписка на контекст
+
+  const [isCardDeletePopupOpen, setIsCardDeletePopupOpen] = React.useState(false); //Переменная состояния
+  const [selectedCard, setSelectedCard] = React.useState(); //Переменная состояния
+  const [isOpen, setIsOpen] = React.useState(false); //Переменная состояния
+
+// const [cards, setCards] = React.useState
+
+  // const handleCardClick = (card) => {
   const handleCardClick = (card) => {
+    // setSelectedCard(card);
     setSelectedCard(card);
     setIsOpen(!isOpen);
   }
@@ -17,19 +30,52 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, object, cards, onClose, 
     setSelectedCard();
     setIsCardDeletePopupOpen(false);
   }
-  const handleCardDeleteClick = () => {
+  const handleCardDeletePopup = () => {
     setIsCardDeletePopupOpen(!isCardDeletePopupOpen);
   }
 
+  //Функция проставления лайка
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === actualUserData._id);
+
+    if (!isLiked) {
+      api.likePlus(card._id)
+      .then((newCard) => {
+        const newCards = cards.map((item) => item._id === card._id ? newCard : item);
+        setCards(newCards);
+      });
+    }
+    if (isLiked) {
+      api.likeMinus(card._id)
+      .then((newCard) => {
+        const newCards = cards.map((item) => item._id === card._id ? newCard : item);
+        setCards(newCards);
+      });
+    }
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCardFromServer(card._id)
+    .then(() => {
+      const newCards = cards.filter((item) => item._id !== card._id ? true : false);
+      setCards(newCards);
+    });
+  };
+
+// console.log('actualUserData');
+// console.log(actualUserData);
   return (
     <>
       <main className="content">
         <section className="profile">
-          <button onClick={onEditAvatar} type="button" className="profile__avatar-button" style={{ backgroundImage: `url(${object.userAvatar}`, backgroundSize: `contain`, minWidth: '120px'}} />
+          {/* <button onClick={onEditAvatar} type="button" className="profile__avatar-button" style={{ backgroundImage: `url(${object.userAvatar}`, backgroundSize: `contain`, minWidth: '120px'}} /> */}
+          <button onClick={onEditAvatar} type="button" className="profile__avatar-button" style={{ backgroundImage: `url(${actualUserData.avatar}`, backgroundSize: `contain`, minWidth: '120px'}} />
           <div className="profile__data">
             <div className="profile__info">
-              <h1 className="profile__title-name">{object.userName}</h1>
-              <p className="profile__subtitle-about">{object.userDescription}</p>
+              {/* <h1 className="profile__title-name">{object.userName}</h1> */}
+              <h1 className="profile__title-name">{actualUserData.name}</h1>
+              {/* <p className="profile__subtitle-about">{object.userDescription}</p> */}
+              <p className="profile__subtitle-about">{actualUserData.description}</p>
             </div>
             <button onClick={onEditProfile} type="button" className="profile__edit-button" />
           </div>
@@ -37,9 +83,11 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, object, cards, onClose, 
         </section>
 
         <section className="card-container">
+          {/* {cards.map((card) => ( */}
           {cards.map((card) => (
             <div key={card._id}>
-              <Card card={card} onCardClick={handleCardClick} onDeleteCard={handleCardDeleteClick} />
+              <Card card={card} onCardClick={handleCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/>
+              {/* <Card card={card} onCardClick={handleCardClick} onDeleteCard={handleCardDeleteClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete}/> */}
             </div>
           ))}
         </section>

@@ -39,7 +39,7 @@ class Api {
       headers: this._headers,
       body: JSON.stringify({
         name: userData.name,
-        about: userData.prof
+        about: userData.description
       })
     })
       .then((res) => {
@@ -111,7 +111,7 @@ class Api {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
-        avatar: newAvatarLink
+        avatar: newAvatarLink.avatar
       })
     })
       .then((res) => {
