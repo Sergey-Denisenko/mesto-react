@@ -8,6 +8,7 @@ import { CurrentUserContext, currentUserData } from '../contexts/CurrentUserCont
 import { CurrentCardsContext, currentCardsData } from '../contexts/CurrentCardsContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
 
@@ -108,6 +109,70 @@ function App() {
     };
   }, []);
 
+//-----------------------------------CARDS-----------------------------------
+
+  // const actualUserData = React.useContext(CurrentUserContext); //Подписка на контекст
+  // console.log('actualUserData');
+  // console.log(actualUserData);
+  // console.log('currentUser');
+  // console.log(currentUser);
+  function handleAddPlaceSubmit(userCardData) {
+    api.addNewCardToServer(userCardData)
+    .then((newCard) => {
+      setCards(
+        [...cards, newCard]
+      );
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+    return () => {
+    }
+  }
+
+
+//Функция проставления лайка
+  function handleCardLike(card) {
+    // const isLiked = card.likes.some(i => i._id === actualUserData._id);
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+
+    if (!isLiked) {
+      api.likePlus(card._id)
+      .then((newCard) => {
+        const newCards = cards.map((item) => item._id === card._id ? newCard : item);
+        setCards(newCards);
+      });
+    }
+    if (isLiked) {
+      api.likeMinus(card._id)
+      .then((newCard) => {
+        const newCards = cards.map((item) => item._id === card._id ? newCard : item);
+        setCards(newCards);
+      });
+    }
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCardFromServer(card._id)
+    .then(() => {
+      const newCards = cards.filter((item) => item._id !== card._id ? true : false);
+      setCards(newCards);
+    });
+  };
+
+
+
+
+
+
+
+
+
+
+
+//-----------------------------------CARDS-----------------------------------
+
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
@@ -118,7 +183,8 @@ function App() {
               {/* {console.log('currentUser')}
               {console.log(currentUser)} */}
             {/* <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} object={object} cards={cards} onClose={onClose} closeAllPopups={closeAllPopups}/> */}
-            <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onClose={onClose} closeAllPopups={closeAllPopups} setCards={setCards}/>
+            <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onClose={onClose} closeAllPopups={closeAllPopups}
+            setCards={setCards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
 
             <Footer />
 
@@ -137,12 +203,13 @@ function App() {
               <span id="prof-input-error" className="popup__error" />
             </PopupWithForm> */}
 
-            <PopupWithForm name="add-card" title="Новое место"  isOpen={isAddPlacePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups}>
+            <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
+            {/* <PopupWithForm name="add-card" title="Новое место"  isOpen={isAddPlacePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups}>
               <input id="name-input-add-card" type="text" className="popup-add-card__form-name popup__input" name="name" placeholder="Название" defaultValue="" minLength="1" maxLength="30" autoComplete="off" required/>
               <span id="name-input-add-card-error" className="popup__error" />
               <input id="link-input" type="url" className="popup-add-card__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" defaultValue="" autoComplete="off" required/>
               <span id="link-input-error" className="popup__error" />
-            </PopupWithForm>
+            </PopupWithForm> */}
           </div>
         </CurrentCardsContext.Provider>
       </CurrentUserContext.Provider>
