@@ -1,7 +1,6 @@
 import React from 'react';
 
-// function PopupWithForm({name, title, isOpen, onClose, closeAllPopups, children}) {
-function PopupWithForm({name, title, isOpen, onClose, closeAllPopups, onSubmit, children}) {
+function PopupWithForm({name, title, isOpen, onClose, onSubmit, children}) {
 
   if (onClose === true) {
     document.querySelector(`.popup`).classList.remove('popup_opened');
@@ -20,7 +19,6 @@ function PopupWithForm({name, title, isOpen, onClose, closeAllPopups, onSubmit, 
             // <button disabled type="submit" className="popup__form-submit popup__button popup__button_disabled">Сохранить</button>
           )}
         </fieldset>
-        {/* <button onClick={closeAllPopups} type="button" className="popup__form-close-button popup__close-button" /> */}
         <button onClick={onClose} type="button" className="popup__form-close-button popup__close-button" />
       </form>
     </div>

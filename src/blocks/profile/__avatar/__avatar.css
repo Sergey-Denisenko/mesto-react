@@ -5,12 +5,13 @@
   min-height: 120px;
   object-fit: cover;
   position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .profile__avatar:hover {
-  background-size: auto;
-  background-position: center;
-  background-repeat: no-repeat;
+
   display: block;
   opacity: 0.3;
   cursor: pointer;

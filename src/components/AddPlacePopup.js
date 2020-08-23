@@ -1,9 +1,7 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm';
-import { CurrentUserContext} from '../contexts/CurrentUserContext';
 
 function AddPlacePopup({isOpen, onClose, onAddPlace}) {
-
   const [name, setName] = React.useState('');
   const [link, setLink] = React.useState('');
 
@@ -23,12 +21,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace}) {
         link,
       }
     );
-    console.log('name');
-    console.log(name);
-    console.log('link');
-    console.log(link);
   };
-
 
   return(
     <PopupWithForm name="add-card" title="Новое место"  isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit}>
@@ -36,9 +29,8 @@ function AddPlacePopup({isOpen, onClose, onAddPlace}) {
       <span id="name-input-add-card-error" className="popup__error" />
       <input id="link-input" type="url" value={link} onChange={handleChangeLink} className="popup-add-card__form-image-link popup__input" name="link" placeholder="Ссылка на картинку" autoComplete="off" required/>
       <span id="link-input-error" className="popup__error" />
-  </PopupWithForm>
+    </PopupWithForm>
   )
 }
-
 
 export default AddPlacePopup;

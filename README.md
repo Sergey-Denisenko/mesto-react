@@ -1,4 +1,4 @@
-#  Проектная работа #10, по курсу "Интерфейсы с использованием React"
+#  Проектная работа #11, по курсу "Интерфейсы с использованием React"
 ____
 
 **Проектная работа представляет работу над сервисом "Mesto": интерактивной страницей,
@@ -10,7 +10,7 @@ ____
 :white_check_mark: *технология HTML*
 :white_check_mark: *технология CSS*
 :white_check_mark: *язык программирования JavaScript*
-:white_check_mark: *Reactt*
+:white_check_mark: *React*
 :white_check_mark: *адаптивная вёрстка (grid, flex)*
 :white_check_mark: *методология БЭМ*
 :white_check_mark: *ООП (объекты, методы, классы)*
