@@ -15,7 +15,7 @@ function PopupWithForm({name, title, isOpen, onClose, onSubmit, children}) {
           {isOpen && (name === "card-delete") ? (
             <button type="submit" className="popup-card-delete__form-submit popup__button">Да</button>
           ) : (
-            <button type="submit" className="popup__form-submit popup__button popup__button_disabled">Сохранить</button>
+            <button type="submit" className="popup__form-submit popup__button">Сохранить</button>
             // <button disabled type="submit" className="popup__form-submit popup__button popup__button_disabled">Сохранить</button>
           )}
         </fieldset>
