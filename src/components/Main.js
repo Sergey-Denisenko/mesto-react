@@ -2,13 +2,11 @@ import React from 'react';
 import Card from './Card';
 import ImagePopup from './ImagePopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-// import PopupWithForm from './PopupWithForm';
 
-function Main({onEditAvatar, onEditProfile, onAddPlace, onClose, closeAllPopups, cards, onCardLike, onCardDelete, setOnClose}) {
+function Main({onEditAvatar, onEditProfile, onAddPlace, onClose, closeAllPopups, cards, onCardLike, setOnClose, onCardDeleteClick}) {
 
   const actualUserData = React.useContext(CurrentUserContext); //Подписка на контекст
 
-  const [isCardDeletePopupOpen, setIsCardDeletePopupOpen] = React.useState(false); //Переменная состояния
   const [selectedCard, setSelectedCard] = React.useState(); //Переменная состояния
   const [isOpen, setIsOpen] = React.useState(false); //Переменная состояния
 
@@ -19,11 +17,6 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, onClose, closeAllPopups,
   }
   const resetSelectedCardInImagePopup = () => {
     setSelectedCard();
-  }
-
-  const handleCardDeletePopup = (card) => {
-    setIsCardDeletePopupOpen(!isCardDeletePopupOpen);
-    onCardDelete(card);
   }
 
   return (
@@ -44,12 +37,11 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, onClose, closeAllPopups,
         <section className="card-container">
           {cards.map((card) => (
             <div key={card._id}>
-              <Card card={card} onCardClick={handleCardClick} onCardLike={onCardLike} onCardDeleteClick={handleCardDeletePopup} />
+              <Card card={card} onCardClick={handleCardClick} onCardLike={onCardLike}  onCardDeleteClick={onCardDeleteClick} />
             </div>
           ))}
         </section>
       </main>
-      {/* <PopupWithForm name="card-delete" title="Вы уверены?" isOpen={isCardDeletePopupOpen} onClose={onClose} closeAllPopups={closeAllPopups && closeDeleteCardPopup} /> */}
       <ImagePopup card={selectedCard} onClose={onClose} closeAllPopups={closeAllPopups} resetSelectedCardInImagePopup={resetSelectedCardInImagePopup}/>
     </>
   );

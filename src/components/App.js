@@ -2,12 +2,12 @@ import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-// import PopupWithForm from './PopupWithForm';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import PopupDeleteConfirm from './PopupDeleteConfirm';
 
 function App() {
 
@@ -15,6 +15,11 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+
+  const [isCardDeletePopupOpen, setIsCardDeletePopupOpen] = React.useState(false); //Переменная состояния
+  // const handleCardDeletePopupOpen = () => {
+  //   setIsCardDeletePopupOpen(!isCardDeletePopupOpen);
+  // };
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -33,6 +38,8 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+
+    setIsCardDeletePopupOpen(false);
   };
 
   function handleUpdateUser(userData) {
@@ -129,13 +136,28 @@ function App() {
     }
   }
 
-  function handleCardDelete(card) {
-    api.deleteCardFromServer(card._id)
+  const [tempCardForDelete, setTempCardForDelete] = React.useState(); //Переменная состояния
+
+  const handleCardDeleteClick = (card) => {
+    setIsCardDeletePopupOpen(!isCardDeletePopupOpen);
+    setTempCardForDelete(card);
+    console.log('card 31415');
+    console.log(card);
+  }
+
+  function handleCardDeleteSubmit(evt) {
+    evt.preventDefault();
+    api.deleteCardFromServer(tempCardForDelete._id)
     .then(() => {
-      const newCards = cards.filter((item) => item._id !== card._id ? true : false);
+      const newCards = cards.filter((item) => item._id !== tempCardForDelete._id ? true : false);
       setCards(newCards);
       closeAllPopups();
-    });
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+    return () => {
+    }
   };
 
   return (
@@ -145,7 +167,7 @@ function App() {
           <Header />
 
           <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onClose={onClose} closeAllPopups={closeAllPopups}
-          cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} setOnClose={setOnClose}/>
+          cards={cards} onCardLike={handleCardLike} setOnClose={setOnClose} onCardDeleteClick={handleCardDeleteClick} />
 
           <Footer />
 
@@ -154,6 +176,8 @@ function App() {
           <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
 
           <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
+
+          <PopupDeleteConfirm isOpen={isCardDeletePopupOpen} onClose={closeAllPopups} onCardDelete={handleCardDeleteSubmit}/>
         </div>
       </CurrentUserContext.Provider>
     </div>
