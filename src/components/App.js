@@ -8,6 +8,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import PopupDeleteConfirm from './PopupDeleteConfirm';
+//import FomrValidation from '../utils/FormValidator';
 
 function App() {
 
